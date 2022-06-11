@@ -3,10 +3,10 @@ process.stdin.setEncoding('utf8');
 process.stdin.on('readable', function () {
   const name = process.stdin.read();
   if (name !== null) {
-    process.stdout.write(`Your name is ${name}`);
+    process.stdout.write(`Your name is: ${name}`);
   }
 });
 
 process.stdin.on('end', function () {
-  process.stdout.write('This important software is now closing');
+  process.stdout.write('This important software is now closing\n');
 });
