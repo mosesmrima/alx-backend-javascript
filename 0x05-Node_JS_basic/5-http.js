@@ -1,7 +1,7 @@
 /* eslint-disable */
 const http = require('http');
 const fs = require('fs');
-const path = process.argv[2] || "database.csv";
+const path = process.argv[2]||"none";
 const app = http.createServer((req, res) => {
     if (req.url == "/") {
 	res.write('Hello Holberton School!');
@@ -9,6 +9,9 @@ const app = http.createServer((req, res) => {
     } else if (req.url == "/students") {
 	res.write('This is the list of our students\n');
 	const data = fs.readFile(path, 'utf8', (err, data) => {
+	    if (err) {
+		res.end("Cannot load the database");
+	    } else {
 	    const lines = data.trim().split('\n');
             const len = lines.length - 1;
             let cs = 0;
@@ -28,8 +31,8 @@ const app = http.createServer((req, res) => {
              }
 	res.write(`Number of students in CS: ${cs}. List: ${csList.join(', ')}\n`);
 	res.write(`Number of students in SWE: ${swe}. List: ${sweList.join(', ')}\n`);
-        res.end();
-
+		res.end();
+	    }
 	});
     }
 });
