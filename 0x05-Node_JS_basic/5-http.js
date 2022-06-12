@@ -1,31 +1,36 @@
 /* eslint-disable */
 const http = require('http');
-const countStudents = require('./3-read_file_async');
-
-const path = process.argv[2];
+const fs = require('fs');
+const path = process.argv[2] || "database.csv";
 const app = http.createServer((req, res) => {
     if (req.url == "/") {
 	req.write('Hello Holberton School!');
 	res.end();
     } else if (req.url == "/students") {
-	countStudents(path)
-      .then((data) => {
-        res.write('This is the list of our students\n')
-        data = data.map((item, idx) => {
-          if (idx === 0) {
-            res.write(item + '\n');
-          } else {
-            res.write(item + '\n')
-          }
-        })
+	res.write('This is the list of our students\n');
+	const data = fs.readFile(path, 'utf8', (err, data) => {
+	    const lines = data.trim().split('\n');
+            const len = lines.length - 1;
+            let cs = 0;
+            const csList = [];
+	    let swe = 0;
+            const sweList = [];
+            res.write(`Number of students: ${len}\n`);
+            for (let i = 1; i < lines.length; i++) {
+                 const [fname, lname, age, field] = lines[i].split(',');
+                 if (field === 'CS') {
+                     cs++;
+                     csList.push(fname);
+                 } else if (field === 'SWE') {
+                     swe++;
+                     sweList.push(fname);
+                 }
+             }
+	res.write(`Number of students in CS: ${cs}. List: ${csList.join(', ')}\n`);
+	res.write(`Number of students in SWE: ${swe}. List: ${sweList.join(', ')}\n`);
         res.end();
-      })
-      .catch(() => {
-        console.log();
-        res.write('This is the list of our students\n');
-        res.write('Cannot load the database');
-        res.end();
-      });
+
+	});
     }
 });
 
