@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = process.argv[2] || "database.csv";
 const app = http.createServer((req, res) => {
     if (req.url == "/") {
-	req.write('Hello Holberton School!');
+	res.write('Hello Holberton School!');
 	res.end();
     } else if (req.url == "/students") {
 	res.write('This is the list of our students\n');
